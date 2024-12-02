@@ -10,7 +10,7 @@ on:
 
 jobs:
   local-env:
-    name: Setup Dev Container and Run Commands
+    name: Setup Local Environment
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +43,7 @@ jobs:
           cd to-dos-ui
           npm ci
           npm audit fix
-          npm run start-local-env
-          npm run test
+          npm run start-local-env &
+          sleep 10 
           npm run cypress:run:e2e:local-env
 
