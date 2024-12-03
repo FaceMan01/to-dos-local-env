@@ -9,15 +9,15 @@ on:
       - master
 
 jobs:
-  e2e-test:
+  local-env:
     name: Setup Local Environment
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout Local Env repository
       uses: actions/checkout@v4
 
-    - name: Setup and Start Dev Container
+    - name: Setup and Start Local Env Dev Container
       uses: devcontainers/ci@v0.3
       with:
         runCmd: |
@@ -30,20 +30,17 @@ jobs:
         repository: FaceMan01/to-dos-ui
         path: to-dos-ui
 
-    - name: Build UI Docker image
-      run: |
-        cd to-dos-ui
-        docker build -t to-dos-ui:latest .
+    - name: Setup and Start UI Dev Container
+      uses: devcontainers/ci@v0.3
+      with:
+        configFile: ./to-dos-ui/.devcontainer/devcontainer.json
+        runCmd: |
+          echo "127.0.0.1       to-dos.local.tourmalinecore.internal" >> /etc/hosts
+          curl http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/to-dos/
+          cd to-dos-ui
+          npm ci
+          npm audit fix
+          npm run start-local-env &
+          sleep 10 
+          npm run cypress:run:e2e:local-env
 
-    - name: Run UI Docker Container
-      run: |
-        docker run -d --name to-dos-ui to-dos-ui
-
-    - name: Run Tests
-      run: |
-        docker exec to-dos-ui npm ci
-        docker exec to-dos-ui npm audit fix
-        docker exec to-dos-ui npm run start-local-env &
-        sleep 10
-        docker exec to-dos-ui npm run test
-        docker exec to-dos-ui npm run cypress:run:e2e:local-env
