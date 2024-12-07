@@ -1,9 +1,6 @@
 name: Local Env CI
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -11,7 +8,7 @@ on:
 jobs:
   local-env:
     name: Setup Local Environment
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Local Env repository
@@ -27,7 +24,7 @@ jobs:
     - name: Checkout UI repository
       uses: actions/checkout@v4
       with:
-        repository: FaceMan01/to-dos-ui
+        repository: TourmalineCore/to-dos-ui
         path: to-dos-ui
 
     - name: Setup and Start UI Dev Container
@@ -40,7 +37,5 @@ jobs:
           cd to-dos-ui
           npm ci
           npm audit fix
-          npm run start-local-env &
-          sleep 10 
           npm run cypress:run:e2e:local-env
 
