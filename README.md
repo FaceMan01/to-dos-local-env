@@ -98,6 +98,72 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 - ui: http://to-dos.local.tourmalinecore.internal:40080/to-dos
 - api: http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/api
 
+## Setup Self-Hosted Runner
+
+To run workflow on your device, you need a Linux operating system with installed docekr, nodejs and npm.
+
+For example `Ubuntu`
+
+Installing Docker (instructions from the [official docs](https://docs.docker.com/engine/install/ubuntu/#installation-methods))
+```bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+```bash
+# Install the Docker packages.
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Installing NodeJS and npm
+```bash
+sudo apt install nodejs npm
+```
+
+Next, you will need to fork this repository and create a GitHub runner in the settings. This link works for me: https://github.com/FaceMan01/to-dos-local-env/settings/actions/runners/new (don't forget to change username). 
+
+When setting up a GitHub runner, you will be guided through a series of steps:
+
+
+Download
+```bash
+# Create a folder
+mkdir actions-runner && cd actions-runner
+# Download the latest runner package
+curl -o actions-runner-linux-x64-2.321.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
+# Optional: Validate the hash
+echo "ba46ba7ce3a4d7236b16fbe44419fb453bc08f866b24f04d549ec89f1722a29e  actions-runner-linux-x64-2.321.0.tar.gz" | shasum -a 256 -c
+# Extract the installer
+tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
+```
+
+Configure
+```bash
+# Create the runner and start the configuration experience
+./config.sh --url https://github.com/USERNAME/to-dos-local-env --token YOUR_TOKEN
+# Last step, run it!
+./run.sh
+```
+
+Using your self-hosted runner
+```yaml
+# Use this YAML in your workflow file for each job
+runs-on: self-hosted
+```
+
+For additional details about configuring, running, or shutting down the runner, please check out [product docs](https://docs.github.com/github/automating-your-workflow-with-github-actions/hosting-your-own-runners).
+
 ## Troubleshooting
 - OpenLens not showing any pods, deployments, etc.. Make sure the "Namespace" in view "Workloads" is set to "`local`" or "`All namespaces`"
 
