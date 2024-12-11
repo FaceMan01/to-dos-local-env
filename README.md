@@ -100,7 +100,7 @@ helmfile cache cleanup && helmfile --environment local --namespace local -f depl
 
 ## Setup Self-Hosted Runner
 
-To run workflow on your device, you need a Linux operating system with installed docekr, nodejs and npm.
+To run workflow on your device, you need a Linux operating system with installed docker, nodejs and npm.
 
 For example `Ubuntu`
 
