@@ -33,10 +33,8 @@ jobs:
         configFile: ./to-dos-ui/.devcontainer/devcontainer.json
         runCmd: |
           echo "127.0.0.1       to-dos.local.tourmalinecore.internal" >> /etc/hosts
-          curl http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api/to-dos/
+          curl http://to-dos.local.tourmalinecore.internal:40080/
           cd to-dos-ui
           npm ci
-          npm audit fix
-          npm run start-local-env &
-          npm run cypress:run:e2e:local-env
+          cypress run --e2e --browser chrome --config baseUrl=http://to-dos.local.tourmalinecore.internal:40080 --env API_URL=http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api
 
