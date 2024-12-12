@@ -24,7 +24,8 @@ jobs:
     - name: Checkout UI repository
       uses: actions/checkout@v4
       with:
-        repository: TourmalineCore/to-dos-ui
+        repository: FaceMan01/to-dos-ui
+        ref: hotfix-local-env-test
         path: to-dos-ui
 
     - name: Setup and Start UI Dev Container
@@ -36,5 +37,5 @@ jobs:
           curl http://to-dos.local.tourmalinecore.internal:40080/
           cd to-dos-ui
           npm ci
-          cypress run --e2e --browser chrome --config baseUrl=http://to-dos.local.tourmalinecore.internal:40080 --env API_URL=http://to-dos.local.tourmalinecore.internal:40080/api/to-dos-api
+          npm run cypress:run:e2e:local-env
 
